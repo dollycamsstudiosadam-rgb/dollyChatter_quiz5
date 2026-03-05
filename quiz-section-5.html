@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DollyGirls Chatter Training — Section 5 Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #000000; --surface: #0d0d0d; --surface2: #161616; --border: #2a2a2a;
+    --accent: #ff2ecc; --accent-dim: rgba(255,46,204,0.12); --accent-glow: rgba(255,46,204,0.35);
+    --text: #ffffff; --muted: #777777; --success: #ff2ecc; --danger: #ff4466;
+    --success-dim: rgba(255,46,204,0.1); --danger-dim: rgba(255,68,102,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito Sans', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; position: relative; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; top: -200px; left: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,46,204,0.08) 0%, transparent 70%); pointer-events: none; animation: drift 12s ease-in-out infinite alternate; }
+  body::after { content: ''; position: fixed; bottom: -200px; right: -200px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,46,204,0.05) 0%, transparent 70%); pointer-events: none; animation: drift2 15s ease-in-out infinite alternate; }
+  @keyframes drift { from { transform: translate(0,0); } to { transform: translate(40px,30px); } }
+  @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-30px,-40px); } }
+  .container { width: 100%; max-width: 680px; position: relative; z-index: 1; }
+  .header { text-align: center; margin-bottom: 40px; animation: fadeUp 0.6s ease both; }
+  .badge { display: inline-block; background: var(--accent-dim); border: 1px solid var(--accent); color: var(--accent); font-family: 'Nunito', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; padding: 6px 14px; border-radius: 2px; margin-bottom: 20px; }
+  h1 { font-family: 'Nunito', sans-serif; font-size: clamp(26px, 5vw, 40px); font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; color: var(--text); }
+  h1 span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 12px; margin-top: 10px; letter-spacing: 1px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; animation: fadeUp 0.6s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .entry-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
+  .entry-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; color: var(--text); font-family: 'Nunito Sans', sans-serif; font-size: 16px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 24px; }
+  .entry-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .entry-input::placeholder { color: var(--muted); }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .info-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; }
+  .info-box .val { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
+  .info-box .lbl { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
+  .btn:active { transform: translateY(0); }
+  .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-ghost:hover { background: var(--accent-dim); box-shadow: none; }
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .q-counter { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .q-counter span { color: var(--accent); font-weight: 600; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; box-shadow: 0 0 8px var(--accent-glow); }
+  .section-tag { display: inline-block; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
+  .question-text { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 700; line-height: 1.5; margin-bottom: 24px; color: var(--text); }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { display: flex; align-items: flex-start; gap: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; user-select: none; }
+  .option:hover:not(.locked) { border-color: var(--accent); background: var(--accent-dim); transform: translateX(4px); }
+  .option.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .option.correct { border-color: var(--success); background: var(--success-dim); }
+  .option.wrong { border-color: var(--danger); background: var(--danger-dim); }
+  .option.locked { cursor: default; pointer-events: none; }
+  .opt-letter { min-width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); transition: all 0.2s; flex-shrink: 0; }
+  .option.selected .opt-letter { border-color: var(--accent); color: var(--accent); }
+  .option.correct .opt-letter { border-color: var(--success); color: var(--success); background: var(--success-dim); }
+  .option.wrong .opt-letter { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+  .opt-text { font-size: 13px; line-height: 1.5; padding-top: 3px; }
+  .feedback { margin-top: 18px; padding: 14px 18px; border-radius: 8px; font-size: 12px; line-height: 1.6; display: none; animation: fadeUp 0.3s ease both; }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--success-dim); border: 1px solid var(--success); color: var(--success); }
+  .feedback.wrong-fb { background: var(--danger-dim); border: 1px solid var(--danger); color: var(--danger); }
+  .nav { margin-top: 24px; }
+  .result-score { text-align: center; padding: 32px 0 24px; }
+  .score-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 20px; }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+  .ring-bg { stroke: var(--border); }
+  .ring-fill { transition: stroke-dashoffset 1s ease; }
+  .score-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .score-num .big { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 800; }
+  .score-num .pct { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+  .result-label { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .result-sub { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+  .result-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .rb-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .rb-box .num { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 800; }
+  .rb-box .lbl { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .rb-box.pass .num { color: var(--success); }
+  .rb-box.fail .num { color: var(--danger); }
+  .sending-msg { text-align: center; font-size: 11px; color: var(--muted); margin-bottom: 16px; letter-spacing: 1px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">Section 5 — Core Chatting Strategies</div>
+    <h1><span>Dolly</span>Girls. Knowledge Quiz</h1>
+    <p class="subtitle">4 Pillars · Mirroring · Emotional Intelligence · Arousal Building · Vague Messages</p>
+  </div>
+
+  <div class="card screen active" id="screen-entry">
+    <label class="entry-label" for="tg-input">Your Telegram Username</label>
+    <input class="entry-input" id="tg-input" type="text" placeholder="@yourusername" autocomplete="off"/>
+    <div class="info-grid">
+      <div class="info-box"><div class="val">30</div><div class="lbl">Questions</div></div>
+      <div class="info-box"><div class="val">80%</div><div class="lbl">Pass Mark</div></div>
+    </div>
+    <button class="btn" onclick="startQuiz()">Begin Assessment</button>
+  </div>
+
+  <div class="card screen" id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="q-counter">Question <span id="q-num">1</span> of <span id="q-total">30</span></span>
+        <span class="q-counter"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="section-tag" id="section-tag"></div>
+    <div class="question-text" id="question-text"></div>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav"><button class="btn" id="next-btn" style="display:none" onclick="nextQuestion()">Next Question →</button></div>
+  </div>
+
+  <div class="card screen" id="screen-results">
+    <div class="result-score">
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120" width="130" height="130">
+          <circle class="ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="score-num">
+          <div class="big" id="score-pct">0%</div>
+          <div class="pct">SCORE</div>
+        </div>
+      </div>
+      <div class="result-label" id="result-label"></div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+    <div class="result-breakdown">
+      <div class="rb-box pass"><div class="num" id="r-correct">0</div><div class="lbl">Correct</div></div>
+      <div class="rb-box fail"><div class="num" id="r-wrong">0</div><div class="lbl">Incorrect</div></div>
+    </div>
+    <div class="sending-msg" id="sending-msg">Saving your result...</div>
+    <button class="btn btn-ghost" onclick="retryQuiz()">Retake Quiz</button>
+  </div>
+
+</div>
+<script>
+const WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+const SECTION_NAME = "Section 5 – Core Chatting Strategies";
+const TOTAL = 30;
+
+const questions = [
+
+  // ── 4 PILLARS (7)
+  {
+    section: "4 Pillars",
+    q: "What is the goal of Pillar 1 — Selection & Initiation?",
+    opts: [
+      "Write the most detailed opening message possible to impress the fan",
+      "Choose high-potential fans and start conversations efficiently without wasting time",
+      "Initiate with every single user in the room regardless of their level",
+      "Wait for fans to message first before engaging"
+    ],
+    ans: 1,
+    fb: "Pillar 1 is about choosing the right targets and starting conversations efficiently. Scan the room first, prioritise by user indicators, and open with something light. The principle is 80% of your effort on the 20% most likely to spend."
+  },
+  {
+    section: "4 Pillars",
+    q: "When scanning the room under Pillar 1, which users should you prioritise first?",
+    opts: [
+      "Grey or anonymous users — they are the most likely to be new and curious",
+      "Users who have already tipped, or have high token balances and active colour indicators",
+      "Users who have sent the most messages in public chat",
+      "Users who have been in the room the longest"
+    ],
+    ans: 1,
+    fb: "Always prioritise tippers and users with high-value indicators — name colour on StripChat/Chaturbate, token balance on MFC. These are the most likely to spend. Grey or no-token users are low priority."
+  },
+  {
+    section: "4 Pillars",
+    q: "What is the goal of Pillar 2 — Qualification & Connection?",
+    opts: [
+      "Push every fan toward a private as quickly as possible",
+      "Build rapport and uncover the fan's type and motivation quickly",
+      "Ask as many personal questions as possible in the first message",
+      "Decide immediately whether to ignore a fan based on their colour"
+    ],
+    ans: 1,
+    fb: "Pillar 2 is about building genuine rapport and classifying the fan quickly. By the end of this pillar you should know why they are here and their potential value — which determines your entire strategy going forward."
+  },
+  {
+    section: "4 Pillars",
+    q: "Under Pillar 2, which question best reveals a fan's intent on the platform?",
+    opts: [
+      "'Where are you from?'",
+      "'How old are you?'",
+      "'What are you looking for on the site?' or 'What do you usually like to see here?'",
+      "'How was your day?'"
+    ],
+    ans: 2,
+    fb: "Intent-revealing questions like 'What are you looking for on the site?' or 'What do you usually like to see here?' are the most powerful in Pillar 2. They directly uncover why the fan is there, which tells you their classification and the strategy to use."
+  },
+  {
+    section: "4 Pillars",
+    q: "What is Pillar 3 focused on?",
+    opts: [
+      "Learning as much about the fan as possible before attempting any upsell",
+      "Turning qualified fans into revenue through tips or private shows",
+      "Managing your time across multiple conversations simultaneously",
+      "Building a long-term relationship before any conversion attempt"
+    ],
+    ans: 1,
+    fb: "Pillar 3 is Conversion & Upsell — turning qualified fans into revenue. Once the fan has shown interest or intent through responses, you move to upsell scripts tailored to their type. Sexual fans convert quickly; relationship fans are long-term."
+  },
+  {
+    section: "4 Pillars",
+    q: "According to Pillar 4 — Efficiency & Time Management — what should you do with a user who has not tipped, is not showing private intent, and keeps chatting without spending?",
+    opts: [
+      "Keep investing equal time — they might convert eventually",
+      "Ask them directly why they are not spending",
+      "Continue ignoring them after initial attempts — leave the tab open but focus your energy elsewhere",
+      "Block them to free up space for better users"
+    ],
+    ans: 2,
+    fb: "Pillar 4 is about time management. Non-tippers and non-converters after initial attempts should be deprioritised. Leave the tab open and check occasionally, but your energy must go to users who are actually converting. Time is money."
+  },
+  {
+    section: "4 Pillars",
+    q: "A fan who is lonely and relationship-seeking has connected well in conversation. According to Pillar 3, what is the correct conversion approach?",
+    opts: [
+      "Push hard for a private immediately — the connection means they are ready to spend",
+      "Deny early pushes toward spending and build more connection first — they are long-term loyalty gold",
+      "Redirect them to the tip menu before attempting a private",
+      "Treat them exactly the same as a sexually focused fan"
+    ],
+    ans: 1,
+    fb: "Relationship-seeking fans should not be rushed. Deny early pushes, build the connection first, and let the conversion come naturally. These fans are long-term gold — handled correctly they can generate consistent spending over months or years."
+  },
+
+  // ── MIRRORING (6)
+  {
+    section: "Mirroring",
+    q: "A fan's first message is intensely sexual and direct. You respond with slow, emotional questions about their life. What happens?",
+    opts: [
+      "They appreciate the personal touch and open up emotionally",
+      "The energy mismatch feels like rejection to them and kills momentum — they will likely leave",
+      "It creates a natural transition from sexual to relationship-based conversation",
+      "Nothing — fans appreciate variety in how chatters respond"
+    ],
+    ans: 1,
+    fb: "A sexual fan who gets slow emotional responses feels rejected. They came in with intensity and want it matched. The mismatch kills momentum. With highly sexual fans, match their pace, their tone, and their level of intensity immediately."
+  },
+  {
+    section: "Mirroring",
+    q: "A relationship-seeking fan is asking about the model's hobbies and daily life. You immediately push heavy sexual energy. What is the likely outcome?",
+    opts: [
+      "They are pleasantly surprised and move quickly toward a private",
+      "It feels transactional and makes it obvious you are chasing money — it scares them off",
+      "They appreciate the directness and respect your time",
+      "They slow down and eventually match your energy"
+    ],
+    ans: 1,
+    fb: "Pushing sexual energy onto a relationship-seeking fan feels transactional and makes the chasing-money dynamic obvious. It scares them off. Slow down, ask questions, get to know them, and let the sexual tone develop naturally. Let them lead the escalation."
+  },
+  {
+    section: "Mirroring",
+    q: "What do the first 3–5 messages from a fan typically tell you?",
+    opts: [
+      "Their exact token balance and spending history",
+      "Almost nothing — you need at least 10 messages before classifying a fan",
+      "Everything you need to know — how direct they are, their tone, whether they are sexual or emotional",
+      "Whether they are a premium member on the platform"
+    ],
+    ans: 2,
+    fb: "The first 3–5 messages usually tell you everything. Look at how direct they are, the type of words they use, whether they ask personal questions or jump straight into sexual talk. Adjust immediately. Great chatters are flexible and read the room fast."
+  },
+  {
+    section: "Mirroring",
+    q: "A fan who was being playful and jokey suddenly becomes more serious and direct. What should you do?",
+    opts: [
+      "Stay playful — consistency is more important than matching their shift",
+      "Ignore the change and redirect back to the jokey tone that was working",
+      "Shift with them — if they escalate or change energy, you match the change",
+      "Ask them directly why their mood has changed"
+    ],
+    ans: 2,
+    fb: "Mirroring is continuous — it is not a one-time read at the start of a conversation. If they escalate, you escalate. If they slow down, you slow down. If they shift energy, you shift too. Controlled adaptability throughout the entire conversation."
+  },
+  {
+    section: "Mirroring",
+    q: "What is the direct result of mirroring a fan's energy correctly?",
+    opts: [
+      "They immediately ask for a private",
+      "They feel understood — which builds comfort, trust, and ultimately spending",
+      "They spend less time in the room but tip larger amounts",
+      "They are more likely to follow the model on social media"
+    ],
+    ans: 1,
+    fb: "Mirroring builds comfort. Comfort builds trust. Trust builds spending. When fans feel understood they stay longer and convert more easily. This is the chain — and it starts with reading and matching their energy correctly."
+  },
+  {
+    section: "Mirroring",
+    q: "A flirty, jokey fan is teasing and being playful. You respond with intense, explicit sexual messages. What is the problem?",
+    opts: [
+      "None — escalating faster than the fan is always a good strategy",
+      "You risk overwhelming them — energy mismatch at the playful/flirty level often makes fans feel uncomfortable and kills the vibe",
+      "It is fine as long as you use emojis to keep it light",
+      "It only becomes a problem if the fan asks you to slow down"
+    ],
+    ans: 1,
+    fb: "A flirty/jokey fan is in a middle ground. Going too explicit too fast feels forced and overwhelming. Match their playful vibe — be witty, light, tease back. Energy mismatch at this level is one of the most common mistakes chatters make."
+  },
+
+  // ── EMOTIONAL INTELLIGENCE (6)
+  {
+    section: "Emotional Intelligence",
+    q: "A fan says: 'You probably say this to everyone.' How should you respond?",
+    opts: [
+      "Agree and move on — there is no point dwelling on it",
+      "Immediately push for a private to show them you value them",
+      "Do not argue or get defensive — reassure them calmly, make them feel valued and emotionally heard",
+      "Tell them that all fans get the same treatment to set realistic expectations"
+    ],
+    ans: 2,
+    fb: "This is an insecurity signal. Do not argue, do not get defensive, and do not immediately try to sell something. Reassure them calmly. Make them feel valued and emotionally safe. When handled correctly, these fans become very loyal and return consistently."
+  },
+  {
+    section: "Emotional Intelligence",
+    q: "A fan who was spending heavily has suddenly gone quiet and is giving very short replies. What is the most likely cause and correct response?",
+    opts: [
+      "They have run out of tokens — check their balance and suggest topping up",
+      "This is usually emotional, not financial — ask soft questions to understand what changed rather than pushing harder",
+      "They are probably in multiple rooms — send more messages to recapture their attention",
+      "Ignore it — short replies are normal and do not indicate anything significant"
+    ],
+    ans: 1,
+    fb: "A sudden shift from engaged to distant is usually emotional. Pushing harder makes it worse. Ask soft questions, guide the conversation gently, and find out what changed. The best chatters notice emotional shifts early and adjust before the fan disappears."
+  },
+  {
+    section: "Emotional Intelligence",
+    q: "A fan is clearly sad and mentions having a rough day. You immediately respond with sexual messages to cheer them up. What is wrong with this?",
+    opts: [
+      "Nothing — sexual energy is always the best way to change someone's mood",
+      "It feels insensitive — matching emotional state means slowing down when someone is sad, not escalating",
+      "It is only wrong if the fan explicitly says they do not want sexual content",
+      "Nothing — it is the chatter's job to always redirect toward revenue"
+    ],
+    ans: 1,
+    fb: "If someone is sad and you respond sexually, it feels insensitive and disconnected. Emotional intelligence means leaning into their current state. If they are sad, slow down and make them feel better. The revenue follows once they feel emotionally secure — not before."
+  },
+  {
+    section: "Emotional Intelligence",
+    q: "What does it mean to be the 'emotional anchor' in a conversation?",
+    opts: [
+      "Matching every emotional state the fan brings, including negative ones",
+      "Staying stable and in control of your own reactions regardless of what mood the fan brings",
+      "Always keeping the conversation positive and upbeat no matter what",
+      "Letting the fan dictate the emotional direction of every conversation"
+    ],
+    ans: 1,
+    fb: "Being the emotional anchor means you stay stable no matter what the fan brings. You cannot take comments personally, get defensive, react emotionally, or sound irritated. You are always in control of your own emotional state — that consistency is what fans trust."
+  },
+  {
+    section: "Emotional Intelligence",
+    q: "Why do fans who feel emotionally understood have the highest long-term value?",
+    opts: [
+      "Because they tip larger amounts in single sessions",
+      "Because they stay longer, spend more over time, become regulars, and feel loyal to the model",
+      "Because they are less likely to ask for refunds",
+      "Because they are easier to move into a private quickly"
+    ],
+    ans: 1,
+    fb: "Emotional intelligence is not about quick wins — it is about long-term income. Fans who feel emotionally understood stay longer, spend more consistently over time, become regulars, and feel loyal. Money follows emotional connection."
+  },
+  {
+    section: "Emotional Intelligence",
+    q: "A fan is in a jokey, high-energy mood. You respond in a serious, deep tone. What is the result?",
+    opts: [
+      "It creates an interesting contrast that fans often enjoy",
+      "It becomes awkward — mismatching a playful fan with seriousness kills the vibe and makes them feel unheard",
+      "Nothing significant — fans adapt to the model's tone naturally",
+      "It only matters if the fan comments on the change in tone"
+    ],
+    ans: 1,
+    fb: "If a fan is playful and energetic and you respond seriously, it creates friction and awkwardness. Emotional intelligence means constantly adjusting — match their mood. Happy and playful gets witty and light back. Always ask yourself: how is this fan feeling right now?"
+  },
+
+  // ── AROUSAL BUILDING (6)
+  {
+    section: "Arousal Building",
+    q: "What is the most important concept in arousal building?",
+    opts: [
+      "Describing in detail what will happen in the private show",
+      "Selling her reaction — making the fan feel like they are genuinely turning the model on right now",
+      "Asking the fan what they want before building any tension",
+      "Moving to the private ask as quickly as possible once a fan turns sexual"
+    ],
+    ans: 1,
+    fb: "The most important concept is selling her reaction, not the act. Fans do not just want to know what will happen in private — they want to feel like they are already having an effect on her in the free chat. When they feel that power, going private becomes something they want for themselves."
+  },
+  {
+    section: "Arousal Building",
+    q: "Which response is stronger for arousal building?",
+    opts: [
+      "'We can do all of that in private'",
+      "'I do that in private'",
+      "'You're actually making it really hard for me to focus on the room right now — don't do this to me without a pvt'",
+      "'Go private if you want more'"
+    ],
+    ans: 2,
+    fb: "Option C is the strongest — it sells her live, in-the-moment reaction. It uses 'I' and 'me' which keeps you in character as the model. It makes the fan feel personally responsible for her losing composure. The other options sell a product; the correct answer sells a real emotional experience."
+  },
+  {
+    section: "Arousal Building",
+    q: "Why should you never immediately push for a private the moment a fan turns sexual?",
+    opts: [
+      "It is against platform rules to ask for privates too early in a conversation",
+      "The fan has not been built to the point where spending feels like the obvious next step — rushing kills momentum",
+      "You should always wait for the fan to suggest the private themselves",
+      "It only becomes appropriate to push for private after a fan has tipped publicly first"
+    ],
+    ans: 1,
+    fb: "Rushing kills momentum. The fan has just turned sexual but has not been built to the point where spending feels natural. Let the tension build first — keep things suggestive, reactive, and aligned. Anticipation is what creates spending. Give them the pull before you give them the option."
+  },
+  {
+    section: "Arousal Building",
+    q: "How long should arousal-building messages be, and why?",
+    opts: [
+      "Long and detailed — the more description the better, it shows effort",
+      "Short — one or two lines maximum. Short messages create rhythm, rhythm creates tension, tension leads to conversions",
+      "Medium length — long enough to be detailed but short enough to stay natural",
+      "Length does not matter as long as the content is strong"
+    ],
+    ans: 1,
+    fb: "Keep messages short — one or two lines at most. Long paragraphs feel scripted and kill the illusion of genuine in-the-moment reactions. Short lines create rhythm. Rhythm creates tension. Tension leads to private conversions. Write how she would naturally text."
+  },
+  {
+    section: "Arousal Building",
+    q: "Why should you avoid giving away too much detail in free chat during arousal building?",
+    opts: [
+      "Platform rules restrict explicit content in public chat",
+      "If they can picture everything already, there is no reason to pay for it — mystery and curiosity drive spending",
+      "It makes the model uncomfortable if too much is described publicly",
+      "Detailed descriptions take too long to type and slow the conversation down"
+    ],
+    ans: 1,
+    fb: "Avoid over-explaining in free chat. Too much detail removes mystery — and mystery is what makes fans want to go further. Give just enough to keep them wanting more. Curiosity and anticipation are stronger than explicit detail every time. If they have it all already, there is no reason to pay."
+  },
+  {
+    section: "Arousal Building",
+    q: "In terms of emotional state, where should the model always be relative to the fan during arousal building?",
+    opts: [
+      "Exactly at the same level — mirror perfectly at all times",
+      "One step behind the fan — let them lead at all times",
+      "One step ahead emotionally — just enough to lead without jumping too far",
+      "Two steps ahead — always push slightly harder than where the fan is"
+    ],
+    ans: 2,
+    fb: "You want to be one step ahead of the fan emotionally — not far ahead, just enough to lead. If they are teasing, show her starting to lose composure. If they are more intense, let her intensity rise with them. Always be one step ahead in her emotional state, not in the act itself."
+  },
+
+  // ── VAGUE + UNCLEAR MESSAGES (5)
+  {
+    section: "Vague Messages",
+    q: "A fan sends a message you do not fully understand. What should you do first?",
+    opts: [
+      "Guess what they mean and respond based on your best interpretation",
+      "Agree with whatever they said to keep the conversation moving",
+      "Stay calm, slow down mentally, and use the team around you to check if anyone recognises the term",
+      "Immediately ask a manager before doing anything else"
+    ],
+    ans: 2,
+    fb: "If you don't understand a message, do not guess. Guessing can lead to agreeing to something inappropriate or misinterpreting a kink. First use the team around you — often someone will recognise it immediately. This is the fastest and safest way to clarify without disrupting conversation flow."
+  },
+  {
+    section: "Vague Messages",
+    q: "Why is guessing the meaning of an unclear message dangerous?",
+    opts: [
+      "It wastes time that could be spent on other fans",
+      "It can lead to agreeing to something inappropriate, promising something the model doesn't do, or misinterpreting a kink — causing confusion, refunds, or discomfort",
+      "It makes the fan feel like the model doesn't know what she's doing",
+      "It is only dangerous if the message involves a financial transaction"
+    ],
+    ans: 1,
+    fb: "Guessing is dangerous because it can lead to agreeing to something inappropriate, promising something the model doesn't do, or misinterpreting a kink entirely. That causes confusion, refunds, bad reviews, or discomfort for the model. Understanding first, responding second — always."
+  },
+  {
+    section: "Vague Messages",
+    q: "A fan sends what appears to be a request for something sexual but the terminology is unclear. What must you do before agreeing or pricing it?",
+    opts: [
+      "Quote a standard price and clarify the details once they are in private",
+      "Agree in principle and ask the model to work it out in the private",
+      "Never agree or price anything until you fully understand what is being asked — clarify first, then proceed",
+      "Decline immediately since any unclear sexual request should be refused"
+    ],
+    ans: 2,
+    fb: "Be extra careful with unclear sexual or niche requests. Never price something or confirm something if you are not completely sure what the fan is asking for. Protecting the model and the account always comes before speed. Clarify fully first, then proceed."
+  },
+  {
+    section: "Vague Messages",
+    q: "A fan sends a slightly random, unclear message that is not important to the direction of the conversation. What is the right approach?",
+    opts: [
+      "Stop the conversation and ask them to clarify before continuing",
+      "Copy the message to the team chat for analysis",
+      "Smoothly redirect back to what you were already discussing — you do not have to respond directly to every unclear sentence",
+      "Ignore the fan completely until they send a clearer message"
+    ],
+    ans: 2,
+    fb: "Not every unclear message needs to be addressed. If it is not important and drawing attention to it would create awkwardness, redirect smoothly back to the conversation. Shift the focus naturally and maintain momentum. You only need to stop and clarify when it actually matters."
+  },
+  {
+    section: "Vague Messages",
+    q: "Nobody on the team recognises a term a fan used, and you still don't understand it after checking. What should you do?",
+    opts: [
+      "Tell the fan their message wasn't appropriate and move on",
+      "Ask the fan to explain what they mean — keep it natural and light, frame it as curiosity rather than confusion",
+      "Agree with whatever they said and work it out later",
+      "End the conversation politely"
+    ],
+    ans: 1,
+    fb: "If after checking with the team and researching you still don't understand, ask the fan to explain. Keep it natural and light — frame it as curiosity rather than confusion. Most fans are happy to explain, especially if it relates to something they are into. There is nothing wrong with asking."
+  }
+
+];
+
+// ── STATE
+let telegramName = "", currentQ = 0, score = 0, answered = false, shuffled = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  const raw = document.getElementById('tg-input').value.trim();
+  if (!raw) { document.getElementById('tg-input').focus(); return; }
+  telegramName = raw.startsWith('@') ? raw : '@' + raw;
+  shuffled = shuffle(questions);
+  currentQ = 0; score = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+document.getElementById('tg-input').addEventListener('keydown', e => { if (e.key === 'Enter') startQuiz(); });
+
+function renderQuestion() {
+  answered = false;
+  const q = shuffled[currentQ];
+  const letters = ['A','B','C','D'];
+  document.getElementById('q-num').textContent = currentQ + 1;
+  document.getElementById('section-tag').textContent = q.section;
+  document.getElementById('question-text').textContent = q.q;
+  document.getElementById('progress-fill').style.width = ((currentQ / TOTAL) * 100) + '%';
+  document.getElementById('next-btn').style.display = 'none';
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback'; fb.textContent = '';
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt}</div>`;
+    div.onclick = () => selectAnswer(i);
+    list.appendChild(div);
+  });
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = shuffled[currentQ];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o => o.classList.add('locked'));
+  options[idx].classList.add('selected');
+  const fb = document.getElementById('feedback');
+  if (idx === q.ans) {
+    score++;
+    options[idx].classList.add('correct');
+    fb.className = 'feedback correct-fb show';
+    fb.textContent = '✓ Correct — ' + q.fb;
+  } else {
+    options[idx].classList.add('wrong');
+    options[q.ans].classList.add('correct');
+    fb.className = 'feedback wrong-fb show';
+    fb.textContent = '✗ Incorrect — ' + q.fb;
+  }
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < TOTAL) { renderQuestion(); } else { showResults(); }
+}
+
+function showResults() {
+  showScreen('screen-results');
+  const pct = Math.round((score / TOTAL) * 100);
+  const passed = pct >= 80;
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-pct').style.color = passed ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = TOTAL - score;
+  document.getElementById('result-label').textContent = passed ? '🎉 You Passed!' : '❌ Not Quite';
+  document.getElementById('result-label').style.color = passed ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('result-sub').textContent = passed
+    ? `Great work, ${telegramName}. You're cleared to move forward.`
+    : `${telegramName}, you needed 80% to pass. Review the material and try again.`;
+  const ring = document.getElementById('ring-fill');
+  ring.style.stroke = passed ? 'var(--success)' : 'var(--danger)';
+  setTimeout(() => { ring.style.strokeDashoffset = 326.7 - (326.7 * pct / 100); }, 100);
+  sendToSheets(telegramName, pct, score, passed);
+}
+
+function retryQuiz() {
+  shuffled = shuffle(questions);
+  currentQ = 0; score = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+async function sendToSheets(telegram, pct, correct, passed) {
+  const msg = document.getElementById('sending-msg');
+  if (!WEBHOOK_URL || WEBHOOK_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+    msg.textContent = "⚠ No webhook configured — result not saved.";
+    return;
+  }
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        telegram, section: SECTION_NAME, score: pct,
+        correct, wrong: TOTAL - correct,
+        passed: passed ? "PASS" : "FAIL",
+        timestamp: new Date().toISOString()
+      })
+    });
+    msg.textContent = "✓ Result saved successfully.";
+  } catch (e) {
+    msg.textContent = "⚠ Could not save result — check webhook URL.";
+  }
+}
+</script>
+</body>
+</html>
