@@ -148,7 +148,7 @@
 
 </div>
 <script>
-const WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwtD6KkKFgbk4oC2BTnQNWP6xbjUrYQp3gWt0zjGDIj3enzmR_z8dnVL38hAz9Nw0dx/exec";
 const SECTION_NAME = "Section 5 – Core Chatting Strategies";
 const TOTAL = 30;
 
@@ -632,7 +632,7 @@ function showScreen(id) {
 
 async function sendToSheets(telegram, pct, correct, passed) {
   const msg = document.getElementById('sending-msg');
-  if (!WEBHOOK_URL || WEBHOOK_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+  if (!WEBHOOK_URL || WEBHOOK_URL === "https://script.google.com/macros/s/AKfycbwtD6KkKFgbk4oC2BTnQNWP6xbjUrYQp3gWt0zjGDIj3enzmR_z8dnVL38hAz9Nw0dx/exec") {
     msg.textContent = "⚠ No webhook configured — result not saved.";
     return;
   }
